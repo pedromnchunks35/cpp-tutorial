@@ -111,3 +111,51 @@ b=temp;
 - We cant delete sharepoints
 - Weak pointer puts a lock to the reference, making it impossible to delete in case is has a lock
 - We can also use it to know how many places in the program are using it
+```
+std::weak_ptr<MyClass> weak;
+std::shared_ptr<MyClass> shared = std::make_shared<MyClass>();
+weak=shared;
+if(auto sharedFromWeak = weak.lock()){
+  //? Safely use the object
+}
+//? When shared goes out of scope and we are using it throught a weak, then it gets destroyed
+```
+# Shared Pointer
+- A pointer that gots shared between multiple parts of the program
+- The Object will be automatically deallocated only when the last shared_ptr that points to it its destroyed
+- There is a counter that increments everytime the pointer is created
+- When all decremented it gets destroyed
+```
+std::shared_ptr<MyClass> ptr2 = ptr1;
+```
+# Unique Pointer
+- We cannot copy unique pointers
+- Only one pointer is allowed to own a object at a time
+```
+std::unique_ptr<int> p1(new int(5));
+std::unique_ptr<int> p2 = std::make_unique<int>(10);
+```
+# Raw Pointers and `new` and `delete` operators
+- Low level pointers and serve to manually manage pointers
+```
+int* ptr = new int;
+*ptr = 42;
+```
+```
+int* ptr = new int;
+*ptr=42;
+delete ptr;
+```
+- We can also allocate and deallocate using arrays
+```
+int n = 10;
+int* arr = new int[n];
+for(int i=0;i<n;i++){
+  arr[i]=i;
+}
+delete[] arr;
+```
+# Memory Leakage
+- Occurs when we dont free memory when we are no longer needing things
+- This results in poor performance and crashes
+- This happens when using raw pointers
